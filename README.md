@@ -1,6 +1,7 @@
 # ALX Polly: A Polling Application
 
-Welcome to ALX Polly, a full-stack polling application built with Next.js, TypeScript, and Supabase. This project serves as a practical learning ground for modern web development concepts, with a special focus on identifying and fixing common security vulnerabilities.
+ALX Polly is a modern polling web application that enables users to create, share, and vote on polls. It showcases secure authentication, real-time poll management, and a clean, responsive UI. This project is designed for learning and security auditing—several vulnerabilities are intentionally present for educational purposes.
+
 
 ## About the Application
 
@@ -10,6 +11,8 @@ ALX Polly allows authenticated users to create, share, and vote on polls. It's a
 -   **Poll Management**: Users can create, view, and delete their own polls.
 -   **Voting System**: A straightforward system for casting and viewing votes.
 -   **User Dashboard**: A personalized space for users to manage their polls.
+-   - **Vote on polls** (with  authentication)
+    - **QR Code Generation:** `qrcode.react` (optional for sharing polls)
 
 The application is built with a modern tech stack:
 
@@ -19,13 +22,55 @@ The application is built with a modern tech stack:
 -   **UI**: [Tailwind CSS](https://tailwindcss.com/) with [shadcn/ui](https://ui.shadcn.com/)
 -   **State Management**: React Server Components and Client Components
 
----
+### Add environment variables
 
-## 🚀 The Challenge: Security Audit & Remediation
+Create a `.env.local` file in the project root with the following:
 
-As a developer, writing functional code is only half the battle. Ensuring that the code is secure, robust, and free of vulnerabilities is just as critical. This version of ALX Polly has been intentionally built with several security flaws, providing a real-world scenario for you to practice your security auditing skills.
+```
+NEXT_PUBLIC_SUPABASE_URL=your-supabase-url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key # (if needed for admin features)
+```
 
-**Your mission is to act as a security engineer tasked with auditing this codebase.**
+Get these values from your Supabase project dashboard under "Settings" > "API".
+
+
+
+
+###  Configure Supabase
+
+- [Create a free Supabase project](https://app.supabase.com/)
+- In your Supabase dashboard, create the following tables:
+
+#### `polls` table
+
+| Column      | Type    | Notes                   |
+|-------------|---------|-------------------------|
+| id          | UUID    | Primary key, auto-gen   |
+| user_id     | UUID    | References users        |
+| question    | Text    | Poll question           |
+| options     | Array   | Array of option strings |
+| created_at  | Timestamptz | Default NOW()      |
+
+#### `votes` table
+
+| Column       | Type    | Notes                       |
+|--------------|---------|-----------------------------|
+| id           | UUID    | Primary key                 |
+| poll_id      | UUID    | References polls            |
+| user_id      | UUID    | Nullable (for anonymous)    |
+| option_index | Integer | Index of chosen option      |
+| created_at   | Timestamptz | Default NOW()           |
+
+- Enable authentication in Supabase (Email/Password login).
+
+- 
+### Testing
+
+  - Try admin functionality (enable)
+  - npm run dev
+
+
 
 ### Your Objectives:
 
@@ -93,4 +138,4 @@ npm run dev
 
 The application will be available at `http://localhost:3000`.
 
-Good luck, engineer! This is your chance to step into the shoes of a security professional and make a real impact on the quality and safety of this application. Happy hunting!
+
